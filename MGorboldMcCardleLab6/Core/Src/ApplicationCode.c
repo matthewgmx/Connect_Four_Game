@@ -22,6 +22,7 @@ void ApplicationInit(void)
     LTCD__Init();
     LTCD_Layer_Init(0);
     LCD_Clear(0,LCD_COLOR_WHITE);
+    Game_Init();
 
     #if COMPILE_TOUCH_FUNCTIONS == 1
 	InitializeLCDTouch();
@@ -57,3 +58,31 @@ void LCD_Touch_Polling_Demo(void)
 }
 #endif // COMPILE_TOUCH_FUNCTIONS
 
+void EXTI0_IRQHandler(){ // change interrupt type to rising
+	disableInterruptIRQ(EXTI0_IRQn);
+	clearInterruptEXTI(1);
+	// User Button actions
+	ConnectFour_DropPiece(Game.currentCol);
+	// change turns
+	if(Game.currentPlayer == COMPUTER_PLAYER && Game.gameMode == GAMEMODE_ONE_PLAYER){
+		HAL_Delay(500);
+		ConnectFour_ComputerMove();
+	}
+	if(Game.currentPlayer == PLAYER_ONE){
+		Game.currentPlayer = PLAYER_TWO;
+	}
+	if(Game.currentPlayer == PLAYER_TWO){
+		Game.currentPlayer = PLAYER_ONE;
+	}
+	// check if game is over
+	if(ConnectFour_CheckWin()){
+		Game.winner = Game.currentPlayer;
+		Game.state = STATE_GAME_OVER;
+	}
+	else if(ConnectFour_CheckDraw()){
+		Game.isDraw = 1;
+		Game.state = STATE_GAME_OVER;
+	}
+	clearInterruptIRQ(EXTI0_IRQn);
+	enableInterruptIRQ(EXTI0_IRQn);
+}

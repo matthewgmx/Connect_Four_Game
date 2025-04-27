@@ -1,0 +1,10 @@
+../Core/Src/Game.c:13:6:Game_Init	1
+../Core/Src/Game.c:20:6:ConnectFour_ResetGame	1
+../Core/Src/Game.c:28:6:ConnectFour_GameLoop	2
+../Core/Src/Game.c:40:6:ConnectFour_ProcessInput	17
+../Core/Src/Game.c:81:6:ConnectFour_DrawPiece	2
+../Core/Src/Game.c:91:6:ConnectFour_GameOver	3
+../Core/Src/Game.c:164:9:ConnectFour_DropPiece	3
+../Core/Src/Game.c:174:6:ConnectFour_ComputerMove	4
+../Core/Src/Game.c:190:9:ConnectFour_CheckWin	25
+../Core/Src/Game.c:226:9:ConnectFour_CheckDraw	4

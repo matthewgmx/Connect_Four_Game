@@ -1,0 +1,10 @@
+../Core/Src/Game.c:13:6:Game_Init	8	static
+../Core/Src/Game.c:20:6:ConnectFour_ResetGame	8	static
+../Core/Src/Game.c:28:6:ConnectFour_GameLoop	8	static
+../Core/Src/Game.c:40:6:ConnectFour_ProcessInput	24	static
+../Core/Src/Game.c:81:6:ConnectFour_DrawPiece	16	static
+../Core/Src/Game.c:91:6:ConnectFour_GameOver	16	static
+../Core/Src/Game.c:164:9:ConnectFour_DropPiece	24	static
+../Core/Src/Game.c:174:6:ConnectFour_ComputerMove	16	static
+../Core/Src/Game.c:190:9:ConnectFour_CheckWin	40	static
+../Core/Src/Game.c:226:9:ConnectFour_CheckDraw	16	static

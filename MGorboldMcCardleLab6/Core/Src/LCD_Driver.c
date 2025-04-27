@@ -236,6 +236,14 @@ void LCD_Draw_Vertical_Line(uint16_t x, uint16_t y, uint16_t len, uint16_t color
   }
 }
 
+void LCD_Draw_Horizontal_Line(uint16_t x, uint16_t y, uint16_t len, uint16_t color)
+{
+  for (uint16_t i = 0; i < len; i++)
+  {
+      LCD_Draw_Pixel(i+x, y, color);
+  }
+}
+
 void LCD_Clear(uint8_t LayerIndex, uint16_t Color)
 {
 	if (LayerIndex == 0){
@@ -329,6 +337,95 @@ void visualDemo(void)
 	LCD_DisplayChar(125,160,'r');
 	LCD_DisplayChar(130,160,'l');
 	LCD_DisplayChar(140,160,'d');
+}
+
+void screen1(void){
+	LCD_Clear(0, LCD_COLOR_BLACK);
+	// Initial game screen, select game mode
+	LCD_SetTextColor(LCD_COLOR_WHITE);
+	LCD_SetFont(&Font16x24);
+
+	LCD_DisplayChar(30, 20, 'C');
+	LCD_DisplayChar(50, 20, 'O');
+	LCD_DisplayChar(70, 20, 'N');
+	LCD_DisplayChar(90, 20, 'N');
+	LCD_DisplayChar(110, 20, 'E');
+	LCD_DisplayChar(130, 20, 'C');
+	LCD_DisplayChar(150, 20, 'T');
+	LCD_DisplayChar(170, 20, ' ');
+	LCD_DisplayChar(190, 20, '4');
+
+	LCD_DisplayChar(20,80,'S');
+	LCD_DisplayChar(35,80,'e');
+	LCD_DisplayChar(45,80,'l');
+	LCD_DisplayChar(55,80,'e');
+	LCD_DisplayChar(70,80,'c');
+	LCD_DisplayChar(80,80,'t');
+	LCD_DisplayChar(100,80,'G');
+	LCD_DisplayChar(118,80,'a');
+	LCD_DisplayChar(135,80,'m');
+	LCD_DisplayChar(150,80,'e');
+	LCD_DisplayChar(165,80,'m');
+	LCD_DisplayChar(180,80,'o');
+	LCD_DisplayChar(192,80,'d');
+	LCD_DisplayChar(205,80,'e');
+	LCD_DisplayChar(215,80,':');
+	// button 1
+	LCD_DisplayChar(50,150,'1');
+	LCD_DisplayChar(70,150,'P');
+	LCD_DisplayChar(80,150,'l');
+	LCD_DisplayChar(90,150,'a');
+	LCD_DisplayChar(100,150,'y');
+	LCD_DisplayChar(110,150,'e');
+	LCD_DisplayChar(120,150,'r');
+	LCD_DisplayChar(140,150,'M');
+	LCD_DisplayChar(155,150,'o');
+	LCD_DisplayChar(167,150,'d');
+	LCD_DisplayChar(180,150,'e');
+	LCD_Draw_Vertical_Line(45,145,35,LCD_COLOR_WHITE);
+	LCD_Draw_Vertical_Line(195,145,35,LCD_COLOR_WHITE);
+	LCD_Draw_Horizontal_Line(45,145,150,LCD_COLOR_WHITE);
+	LCD_Draw_Horizontal_Line(45,180,150,LCD_COLOR_WHITE);
+
+	// button 2
+	LCD_DisplayChar(50,220,'2');
+	LCD_DisplayChar(70,220,'P');
+	LCD_DisplayChar(80,220,'l');
+	LCD_DisplayChar(90,220,'a');
+	LCD_DisplayChar(100,220,'y');
+	LCD_DisplayChar(110,220,'e');
+	LCD_DisplayChar(120,220,'r');
+	LCD_DisplayChar(140,220,'M');
+	LCD_DisplayChar(155,220,'o');
+	LCD_DisplayChar(167,220,'d');
+	LCD_DisplayChar(180,220,'e');
+	LCD_Draw_Vertical_Line(45,215,35,LCD_COLOR_WHITE);
+	LCD_Draw_Vertical_Line(195,215,35,LCD_COLOR_WHITE);
+	LCD_Draw_Horizontal_Line(45,215,150,LCD_COLOR_WHITE);
+	LCD_Draw_Horizontal_Line(45,250,150,LCD_COLOR_WHITE);
+
+}
+
+void screen2(void){
+	LCD_Clear(0, LCD_COLOR_BLUE);
+	// Gameplay
+	// Draw vertical lines in connect four grid screen is 320 x 240
+	LCD_Draw_Vertical_Line(1,50,204, LCD_COLOR_WHITE);
+	LCD_Draw_Vertical_Line(35,50,204, LCD_COLOR_WHITE);
+	LCD_Draw_Vertical_Line(69,50,204, LCD_COLOR_WHITE);
+	LCD_Draw_Vertical_Line(103,50,204, LCD_COLOR_WHITE);
+	LCD_Draw_Vertical_Line(137,50,204, LCD_COLOR_WHITE);
+	LCD_Draw_Vertical_Line(171,50,204, LCD_COLOR_WHITE);
+	LCD_Draw_Vertical_Line(205,50,204, LCD_COLOR_WHITE);
+	LCD_Draw_Vertical_Line(239,50,204, LCD_COLOR_WHITE);
+	// draw horizontal lines in connected four grid
+	LCD_Draw_Horizontal_Line(0,50,240,LCD_COLOR_WHITE);
+	LCD_Draw_Horizontal_Line(0,84,240,LCD_COLOR_WHITE);
+	LCD_Draw_Horizontal_Line(0,118,240,LCD_COLOR_WHITE);
+	LCD_Draw_Horizontal_Line(0,152,240,LCD_COLOR_WHITE);
+	LCD_Draw_Horizontal_Line(0,186,240,LCD_COLOR_WHITE);
+	LCD_Draw_Horizontal_Line(0,220,240,LCD_COLOR_WHITE);
+	LCD_Draw_Horizontal_Line(0,254,240,LCD_COLOR_WHITE);
 }
 
 /**
