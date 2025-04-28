@@ -20,8 +20,8 @@ void Game_Init(void){
 }
 
 void ConnectFour_ResetGame(void){
-	for(int rows = 1; rows <= BOARD_ROWS; rows++){
-		for(int cols = 1; cols <= BOARD_COLS; cols++){
+	for(int rows = 0; rows < BOARD_ROWS; rows++){
+		for(int cols = 0; cols < BOARD_COLS; cols++){
 			Game.board[rows][cols] = EMPTY_CELL;
 		}
 	}
@@ -104,8 +104,8 @@ void ConnectFour_DrawPiece(void) {
 }
 
 void ConnectFour_DrawBoard(void){
-	for (int cols = 1; cols <= BOARD_COLS; cols++){
-		for(int rows = 1; rows <= BOARD_ROWS; rows++){
+	for (int cols = 0; cols < BOARD_COLS; cols++){
+		for(int rows = 0; rows < BOARD_ROWS; rows++){
 			int x = cols * CELL_SIZE + CELL_SIZE / 2 + 1;
 			int y = rows * CELL_SIZE + CELL_SIZE / 2 + 50;
 			if(Game.board[rows][cols] == PLAYER_ONE){
@@ -203,48 +203,61 @@ uint8_t ConnectFour_DropPiece(uint8_t col){
 
 void ConnectFour_ComputerMove(void){
 	uint32_t random;
-	uint8_t col;
-	uint8_t valid;
+	uint8_t cols;
+	uint8_t valid = 0;
 	if(HAL_RNG_GenerateRandomNumber(&hrng, &random) == HAL_OK){
-		col = random % BOARD_COLS;
-		if(ConnectFour_DropPiece(col)){
-			return;
+		cols = random % BOARD_COLS;
+		valid = ConnectFour_DropPiece(cols);
+		if(!valid){
+			for(cols = 0; cols < BOARD_COLS; cols++){
+				valid = ConnectFour_DropPiece(cols);
+				if(valid){
+					break;
+				}
+			}
 		}
 	}
-	while(!valid){			// if column is full
-		col = rand() % BOARD_COLS;
-		valid = ConnectFour_DropPiece(col);
+	else{
+		for(cols = 0; cols < BOARD_COLS; cols++){
+			valid = ConnectFour_DropPiece(cols);
+			if(valid){
+				break;
+			}
+		}
+	}
+	if(valid){
+		Game.currentCol = cols;
 	}
 }
 
 uint8_t ConnectFour_CheckWin(void){
 	// horizontal
-	for(int rows = 1; rows <= BOARD_ROWS; rows++){
-		for(int cols = 1; cols <= BOARD_COLS - 3; cols++){
+	for(int rows = 0; rows < BOARD_ROWS; rows++){
+		for(int cols = 0; cols < BOARD_COLS - 3; cols++){
 			if(Game.board[rows][cols] == Game.currentPlayer && Game.board[rows][cols+1] == Game.currentPlayer && Game.board[rows][cols+2] == Game.currentPlayer && Game.board[rows][cols+3] == Game.currentPlayer){
 				return 1;
 			}
 		}
 	}
 	// vertical
-	for(int rows = 1; rows <= BOARD_ROWS-3; rows++){
-		for(int cols = 1; cols <= BOARD_COLS; cols++){
+	for(int rows = 0; rows < BOARD_ROWS - 3; rows++){
+		for(int cols = 0; cols < BOARD_COLS; cols++){
 			if(Game.board[rows][cols] == Game.currentPlayer && Game.board[rows+1][cols] == Game.currentPlayer && Game.board[rows+2][cols] == Game.currentPlayer && Game.board[rows+3][cols] == Game.currentPlayer){
 				return 1;
 			}
 		}
 	}
 	// diagonal upwards to right
-	for(int rows = 1; rows <= BOARD_ROWS -3  ; rows++){
-		for(int cols = 1; cols <= BOARD_COLS - 3; cols++){
+	for(int rows = 0; rows < BOARD_ROWS - 3  ; rows++){
+		for(int cols = 0; cols < BOARD_COLS - 3; cols++){
 			if(Game.board[rows][cols] == Game.currentPlayer && Game.board[rows+1][cols+1] == Game.currentPlayer && Game.board[rows+2][cols+2] == Game.currentPlayer && Game.board[rows+3][cols+3] == Game.currentPlayer){
 				return 1;
 			}
 		}
 	}
 	// diagonal downwards to right
-	for(int rows = 4; rows <= BOARD_ROWS; rows++){
-		for(int cols = 1; cols <= BOARD_COLS - 3; cols++){
+	for(int rows = 3; rows < BOARD_ROWS; rows++){
+		for(int cols = 0; cols < BOARD_COLS - 3; cols++){
 			if(Game.board[rows][cols] == Game.currentPlayer && Game.board[rows-1][cols+1] == Game.currentPlayer && Game.board[rows-2][cols+2] == Game.currentPlayer && Game.board[rows-3][cols+3] == Game.currentPlayer){
 				return 1;
 			}
@@ -254,8 +267,8 @@ uint8_t ConnectFour_CheckWin(void){
 }
 
 uint8_t ConnectFour_CheckDraw(void){
-	for (int cols = 1; cols <= BOARD_COLS; cols++){
-		for(int rows = 1; rows <= BOARD_ROWS; rows++){
+	for (int cols = 0; cols < BOARD_COLS; cols++){
+		for(int rows = 0; rows < BOARD_ROWS; rows++){
 			if(Game.board[rows][cols] == EMPTY_CELL){
 				return 0;
 			}

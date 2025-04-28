@@ -86,15 +86,13 @@ void EXTI0_IRQHandler(){ // change interrupt type to rising
 			if(Game.currentPlayer == PLAYER_ONE){
 				Game.currentPlayer = PLAYER_TWO;
 			}
-			if(Game.currentPlayer == PLAYER_TWO){
+			else if(Game.currentPlayer == PLAYER_TWO){
 				Game.currentPlayer = PLAYER_ONE;
 			}
-			ConnectFour_DrawPiece();
-			if(Game.currentPlayer == COMPUTER_PLAYER && Game.gameMode == GAMEMODE_ONE_PLAYER){
+			else if(Game.currentPlayer == COMPUTER_PLAYER && Game.gameMode == GAMEMODE_ONE_PLAYER){
 				HAL_Delay(500);
 				ConnectFour_ComputerMove();
 				ConnectFour_DrawBoard();
-
 				if(ConnectFour_CheckWin()){
 					Game.winner = COMPUTER_PLAYER;
 					Game.RedWins++;
