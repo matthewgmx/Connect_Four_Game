@@ -52,18 +52,20 @@ typedef struct {
     uint8_t RedWins;
 } ConnectFourGame;
 
-ConnectFourGame Game;
-RNG_HandleTypeDef hrng;
+extern ConnectFourGame Game;
+extern RNG_HandleTypeDef hrng;
 
 void Game_Init(void); //
 void ConnectFour_GameLoop(void); //
 void ConnectFour_DrawPiece(void); //
+void ConnectFour_DrawBoard(void);
 void ConnectFour_GameOver(void); //
 void ConnectFour_ProcessInput(STMPE811_TouchData *touchData); //
 void ConnectFour_ComputerMove(void); //
 uint8_t ConnectFour_DropPiece(uint8_t col); //
-uint8_t ConnectFour_CheckWin(void);
-uint8_t ConnectFour_CheckDraw(void);
+uint8_t ConnectFour_CheckWin(void); //
+uint8_t ConnectFour_CheckDraw(void); //
 void ConnectFour_ResetGame(void); //
+
 
 #endif /* INC_GAME_H_ */

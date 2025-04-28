@@ -44,8 +44,6 @@ I2C_HandleTypeDef hi2c3;
 
 LTDC_HandleTypeDef hltdc;
 
-RNG_HandleTypeDef hrng;
-
 SPI_HandleTypeDef hspi5;
 
 TIM_HandleTypeDef htim2;

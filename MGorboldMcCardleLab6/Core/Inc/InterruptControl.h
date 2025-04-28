@@ -11,7 +11,8 @@
 #define INTERRUPTCONTROL_H_
 
 
-#include "stm32f4xx.h"
+//#include "stm32f4xx.h"
+#include "stm32f4xx_hal.h"
 
 #define EXTI_IRQ_0 		6
 
