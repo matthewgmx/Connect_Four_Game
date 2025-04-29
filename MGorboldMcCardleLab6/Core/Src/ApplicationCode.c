@@ -23,7 +23,6 @@ void ApplicationInit(void)
     LTCD_Layer_Init(0);
     LCD_Clear(0,LCD_COLOR_WHITE);
     Game_Init();
-
     #if COMPILE_TOUCH_FUNCTIONS == 1
 	InitializeLCDTouch();
 
@@ -83,16 +82,12 @@ void EXTI0_IRQHandler(){ // change interrupt type to rising
 		}
 		// change turns
 		else{
-			if(Game.currentPlayer == PLAYER_ONE){
-				Game.currentPlayer = PLAYER_TWO;
-			}
-			else if(Game.currentPlayer == PLAYER_TWO){
-				Game.currentPlayer = PLAYER_ONE;
-			}
-			else if(Game.currentPlayer == COMPUTER_PLAYER && Game.gameMode == GAMEMODE_ONE_PLAYER){
-				HAL_Delay(500);
+			if(Game.gameMode == GAMEMODE_ONE_PLAYER){
+				Game.currentPlayer = PLAYER_TWO;  // Computer is PLAYER_TWO
+				HAL_Delay(500);  // Small delay to make the computer move visible
 				ConnectFour_ComputerMove();
 				ConnectFour_DrawBoard();
+
 				if(ConnectFour_CheckWin()){
 					Game.winner = COMPUTER_PLAYER;
 					Game.RedWins++;
@@ -107,14 +102,26 @@ void EXTI0_IRQHandler(){ // change interrupt type to rising
 				else{
 					Game.currentPlayer = PLAYER_ONE;
 				}
+
 			}
+			// Switch turns in two-player mode
+			else {
+				if(Game.currentPlayer == PLAYER_ONE){
+					Game.currentPlayer = PLAYER_TWO;
+				}
+				else{
+					Game.currentPlayer = PLAYER_ONE;
+				}
+
 			screen2();
 			ConnectFour_DrawPiece();
 			ConnectFour_DrawBoard();
 			// check if game is over
 
+			}
 		}
 	}
 	clearInterruptIRQ(EXTI0_IRQn);
 	enableInterruptIRQ(EXTI0_IRQn);
 }
+

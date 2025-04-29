@@ -50,6 +50,7 @@ typedef struct {
     uint8_t isDraw;
     uint8_t YellowWins;
     uint8_t RedWins;
+    uint8_t startTime;
 } ConnectFourGame;
 
 extern ConnectFourGame Game;
@@ -66,6 +67,6 @@ uint8_t ConnectFour_DropPiece(uint8_t col); //
 uint8_t ConnectFour_CheckWin(void); //
 uint8_t ConnectFour_CheckDraw(void); //
 void ConnectFour_ResetGame(void); //
-
+uint8_t ConnectFour_GetGameTime(void);
 
 #endif /* INC_GAME_H_ */

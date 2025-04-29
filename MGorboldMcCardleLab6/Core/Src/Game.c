@@ -30,6 +30,7 @@ void ConnectFour_ResetGame(void){
 	Game.currentCol = 4;
 	Game.winner = 0;
 	Game.isDraw = 0;
+	Game.startTime = 0;
 }
 
 void ConnectFour_GameLoop(void){
@@ -54,12 +55,14 @@ void ConnectFour_ProcessInput(STMPE811_TouchData *touchData){
 		if(x >= 45 && x <= 195 && y >= 140 && y <= 175){
 			Game.gameMode = GAMEMODE_ONE_PLAYER;
 			Game.state = STATE_GAME;
+			Game.startTime = 0;
 			screen2();
 			ConnectFour_DrawPiece();
 		}
 		else if(x >= 45 && x <= 195 && y >= 70 && y <= 105){
 			Game.gameMode = GAMEMODE_TWO_PLAYER;
 			Game.state = STATE_GAME;
+			Game.startTime = 0;
 			screen2();
 			ConnectFour_DrawPiece();
 		}
@@ -122,8 +125,12 @@ void ConnectFour_GameOver(void){
 	LCD_Clear(0,LCD_COLOR_BLACK);
 	LCD_SetTextColor(LCD_COLOR_WHITE);
 	LCD_SetFont(&Font16x24);
-	char Yellow = Game.YellowWins;
-	char Red = Game.RedWins;
+	uint8_t Yellow = Game.YellowWins;
+	uint8_t Red = Game.RedWins;
+	uint8_t Time = ConnectFour_GetGameTime();
+	char one = '0' + (Time / 100);
+	char two = '0' + ((Time / 10) % 10);
+	char three = '0' + (Time % 10);
 
 	if(Game.isDraw){
 		LCD_DisplayChar(90, 20, 'D');
@@ -165,7 +172,10 @@ void ConnectFour_GameOver(void){
 	LCD_DisplayChar(60,250,'I');
 	LCD_DisplayChar(80,250,'M');
 	LCD_DisplayChar(110,250,'E');
-	LCD_DisplayChar(170,200,'0'); // need to figure out how to make timer
+	LCD_DisplayChar(150,250,one); // need to figure out how to make timer
+	LCD_DisplayChar(170,250,two);
+	LCD_DisplayChar(190,250,three);
+	LCD_DisplayChar(210,250,'S');
 
 	LCD_SetTextColor(LCD_COLOR_YELLOW);
 	LCD_DisplayChar(40,150,'Y');
@@ -175,7 +185,7 @@ void ConnectFour_GameOver(void){
 	LCD_DisplayChar(130,150,'I');
 	LCD_DisplayChar(150,150,'N');
 	LCD_DisplayChar(170,150,'S');
-	LCD_DisplayChar(170,150,Yellow);
+	LCD_DisplayChar(200,150,(char)(Yellow + '0'));
 
 	LCD_SetTextColor(LCD_COLOR_RED);
 	LCD_DisplayChar(40,200,'R');
@@ -185,9 +195,7 @@ void ConnectFour_GameOver(void){
 	LCD_DisplayChar(130,200,'I');
 	LCD_DisplayChar(150,200,'N');
 	LCD_DisplayChar(170,200,'S');
-	LCD_DisplayChar(170,200,Red);
-
-
+	LCD_DisplayChar(200,200,(char)(Red + '0'));
 }
 
 
@@ -205,29 +213,15 @@ void ConnectFour_ComputerMove(void){
 	uint32_t random;
 	uint8_t cols;
 	uint8_t valid = 0;
-	if(HAL_RNG_GenerateRandomNumber(&hrng, &random) == HAL_OK){
-		cols = random % BOARD_COLS;
-		valid = ConnectFour_DropPiece(cols);
-		if(!valid){
-			for(cols = 0; cols < BOARD_COLS; cols++){
+	while(!valid) {
+			if(HAL_RNG_GenerateRandomNumber(&hrng, &random) == HAL_OK) {
+				cols = random % BOARD_COLS;
 				valid = ConnectFour_DropPiece(cols);
-				if(valid){
-					break;
-				}
 			}
 		}
-	}
-	else{
-		for(cols = 0; cols < BOARD_COLS; cols++){
-			valid = ConnectFour_DropPiece(cols);
-			if(valid){
-				break;
-			}
-		}
-	}
-	if(valid){
+
+		// Update the current column for visual feedback
 		Game.currentCol = cols;
-	}
 }
 
 uint8_t ConnectFour_CheckWin(void){
@@ -277,5 +271,16 @@ uint8_t ConnectFour_CheckDraw(void){
 	return 1;
 }
 
-
+uint8_t ConnectFour_GetGameTime(void) {
+	static uint32_t lastTick = 0;
+	uint32_t currentTick = HAL_GetTick();
+	uint32_t elapsedTicks;
+	if (currentTick >= lastTick) {
+		elapsedTicks = currentTick - lastTick;
+	} else {
+		elapsedTicks = ((0xFFFFFFFF - lastTick) + currentTick);
+	}
+	lastTick = currentTick;
+	return (uint8_t)(elapsedTicks / 1000);
+}
 
