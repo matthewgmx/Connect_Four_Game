@@ -210,6 +210,12 @@ uint8_t ConnectFour_DropPiece(uint8_t col){
 }
 
 void ConnectFour_ComputerMove(void){
+	// change return type to uint8_t
+	// if HAL_RNG == HAL_OK
+	// return HAL_RNG_GenerateRandomNumber
+
+
+
 	uint32_t random;
 	uint8_t cols;
 	uint8_t valid = 0;
@@ -217,10 +223,12 @@ void ConnectFour_ComputerMove(void){
 			if(HAL_RNG_GenerateRandomNumber(&hrng, &random) == HAL_OK) {
 				cols = random % BOARD_COLS;
 				valid = ConnectFour_DropPiece(cols);
+				if(valid) {
+					Game.currentCol = cols;
+					return;
+				}
 			}
 		}
-
-		// Update the current column for visual feedback
 		Game.currentCol = cols;
 }
 

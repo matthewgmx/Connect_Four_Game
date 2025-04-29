@@ -57,10 +57,10 @@ void LCD_Touch_Polling_Demo(void)
 }
 #endif // COMPILE_TOUCH_FUNCTIONS
 
-void EXTI0_IRQHandler(){ // change interrupt type to rising
+void EXTI0_IRQHandler(){
 	disableInterruptIRQ(EXTI0_IRQn);
 	clearInterruptEXTI(1);
-	// User Button actions
+
 	if(ConnectFour_DropPiece(Game.currentCol)){
 
 		ConnectFour_DrawBoard();
@@ -80,14 +80,14 @@ void EXTI0_IRQHandler(){ // change interrupt type to rising
 			Game.state = STATE_GAME_OVER;
 			ConnectFour_GameOver();
 		}
-		// change turns
 		else{
-			if(Game.gameMode == GAMEMODE_ONE_PLAYER){
-				Game.currentPlayer = PLAYER_TWO;  // Computer is PLAYER_TWO
-				HAL_Delay(500);  // Small delay to make the computer move visible
+			//
+			if(Game.gameMode == GAMEMODE_ONE_PLAYER && Game.currentPlayer == PLAYER_ONE){
+				Game.currentPlayer = PLAYER_TWO;
+
 				ConnectFour_ComputerMove();
 				ConnectFour_DrawBoard();
-
+				Game.currentCol = 3;
 				if(ConnectFour_CheckWin()){
 					Game.winner = COMPUTER_PLAYER;
 					Game.RedWins++;
@@ -102,23 +102,18 @@ void EXTI0_IRQHandler(){ // change interrupt type to rising
 				else{
 					Game.currentPlayer = PLAYER_ONE;
 				}
-
 			}
-			// Switch turns in two-player mode
-			else {
+			else if(Game.gameMode == GAMEMODE_TWO_PLAYER) {
 				if(Game.currentPlayer == PLAYER_ONE){
 					Game.currentPlayer = PLAYER_TWO;
 				}
 				else{
 					Game.currentPlayer = PLAYER_ONE;
 				}
-
+			}
 			screen2();
 			ConnectFour_DrawPiece();
 			ConnectFour_DrawBoard();
-			// check if game is over
-
-			}
 		}
 	}
 	clearInterruptIRQ(EXTI0_IRQn);
