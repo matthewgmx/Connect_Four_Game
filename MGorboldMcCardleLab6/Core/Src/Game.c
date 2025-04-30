@@ -210,12 +210,6 @@ uint8_t ConnectFour_DropPiece(uint8_t col){
 }
 
 void ConnectFour_ComputerMove(void){
-	// change return type to uint8_t
-	// if HAL_RNG == HAL_OK
-	// return HAL_RNG_GenerateRandomNumber
-
-
-
 	uint32_t random;
 	uint8_t cols;
 	uint8_t valid = 0;
