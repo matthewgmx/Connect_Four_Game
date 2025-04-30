@@ -44,7 +44,7 @@ typedef struct {
     uint8_t board[BOARD_ROWS][BOARD_COLS];
     uint8_t currentPlayer;
     uint8_t gameMode;
-    uint8_t currentCol; // Colums from 1,2,3,4,5,6,7
+    uint8_t currentCol; // Colums from 0,1,2,3,4,5,6
     GameState state;
     uint8_t winner;
     uint8_t isDraw;
@@ -67,6 +67,8 @@ uint8_t ConnectFour_DropPiece(uint8_t col); //
 uint8_t ConnectFour_CheckWin(void); //
 uint8_t ConnectFour_CheckDraw(void); //
 void ConnectFour_ResetGame(void); //
-uint8_t ConnectFour_GetGameTime(void);
+uint8_t ConnectFour_GetGameTime(void); //
+static uint8_t CountPiecesInRow(uint8_t col, uint8_t player); // use for making smart AI offense and defense
+static uint8_t CheckPotentialWin(uint8_t col, uint8_t player); // for
 
 #endif /* INC_GAME_H_ */

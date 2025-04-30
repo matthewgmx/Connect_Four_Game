@@ -209,22 +209,206 @@ uint8_t ConnectFour_DropPiece(uint8_t col){
 	return 0;
 }
 
-void ConnectFour_ComputerMove(void){
-	uint32_t random;
-	uint8_t cols;
-	uint8_t valid = 0;
-	while(!valid) {
-			if(HAL_RNG_GenerateRandomNumber(&hrng, &random) == HAL_OK) {
-				cols = random % BOARD_COLS;
-				valid = ConnectFour_DropPiece(cols);
-				if(valid) {
-					Game.currentCol = cols;
-					return;
-				}
+static uint8_t CheckPotentialWin(uint8_t col, uint8_t player) {
+	// Find the first empty row in the column
+	int row = -1;
+	for (int r = BOARD_ROWS - 1; r >= 0; r--) {
+		if (Game.board[r][col] == EMPTY_CELL) {
+			row = r;
+			break;
+		}
+	}
+	if (row == -1) return 0; // Column is full
+
+	// Temporarily place the piece
+	Game.board[row][col] = player;
+
+	// Check all directions for a win
+	uint8_t isWin = 0;
+
+	// Check horizontal
+	for (int c = 0; c <= BOARD_COLS - 4; c++) {
+		if (Game.board[row][c] == player &&
+			Game.board[row][c+1] == player &&
+			Game.board[row][c+2] == player &&
+			Game.board[row][c+3] == player) {
+			isWin = 1;
+			break;
+		}
+	}
+
+	// Check vertical
+	if (row <= BOARD_ROWS - 4) {
+		if (Game.board[row][col] == player &&
+			Game.board[row+1][col] == player &&
+			Game.board[row+2][col] == player &&
+			Game.board[row+3][col] == player) {
+			isWin = 1;
+		}
+	}
+
+	// Check diagonal (up-right)
+	for (int r = 0; r <= BOARD_ROWS - 4; r++) {
+		for (int c = 0; c <= BOARD_COLS - 4; c++) {
+			if (Game.board[r][c] == player &&
+				Game.board[r+1][c+1] == player &&
+				Game.board[r+2][c+2] == player &&
+				Game.board[r+3][c+3] == player) {
+				isWin = 1;
+				break;
 			}
 		}
-		Game.currentCol = cols;
+	}
+
+	// Check diagonal (up-left)
+	for (int r = 0; r <= BOARD_ROWS - 4; r++) {
+		for (int c = 3; c < BOARD_COLS; c++) {
+			if (Game.board[r][c] == player &&
+				Game.board[r+1][c-1] == player &&
+				Game.board[r+2][c-2] == player &&
+				Game.board[r+3][c-3] == player) {
+				isWin = 1;
+				break;
+			}
+		}
+	}
+
+	// Remove the temporary piece
+	Game.board[row][col] = EMPTY_CELL;
+	return isWin;
 }
+
+static uint8_t CountPiecesInRow(uint8_t col, uint8_t player) {
+	int row = -1;
+	for (int r = BOARD_ROWS - 1; r >= 0; r--) {
+		if (Game.board[r][col] == EMPTY_CELL) {
+			row = r;
+			break;
+		}
+	}
+	if (row == -1) return 0;
+
+	uint8_t count = 0;
+	Game.board[row][col] = player;
+
+	// Check horizontal
+	for (int c = 0; c <= BOARD_COLS - 3; c++) {
+		uint8_t tempCount = 0;
+		for (int i = 0; i < 3; i++) {
+			if (Game.board[row][c+i] == player) tempCount++;
+		}
+		if (tempCount > count) count = tempCount;
+	}
+
+	// Check vertical
+	if (row <= BOARD_ROWS - 3) {
+		uint8_t tempCount = 0;
+		for (int i = 0; i < 3; i++) {
+			if (Game.board[row+i][col] == player) tempCount++;
+		}
+		if (tempCount > count) count = tempCount;
+	}
+
+	// Check diagonals
+	for (int r = 0; r <= BOARD_ROWS - 3; r++) {
+		for (int c = 0; c <= BOARD_COLS - 3; c++) {
+			uint8_t tempCount = 0;
+			for (int i = 0; i < 3; i++) {
+				if (Game.board[r+i][c+i] == player) tempCount++;
+			}
+			if (tempCount > count) count = tempCount;
+		}
+	}
+
+	for (int r = 0; r <= BOARD_ROWS - 3; r++) {
+		for (int c = 2; c < BOARD_COLS; c++) {
+			uint8_t tempCount = 0;
+			for (int i = 0; i < 3; i++) {
+				if (Game.board[r+i][c-i] == player) tempCount++;
+			}
+			if (tempCount > count) count = tempCount;
+		}
+	}
+
+	Game.board[row][col] = EMPTY_CELL;
+	return count;
+}
+
+void ConnectFour_ComputerMove(void) {
+	uint8_t bestMove = 0;
+	uint8_t bestScore = 0;
+	uint8_t validMove = 0;
+	uint8_t columns[BOARD_COLS];
+	uint32_t random;
+
+	for (uint8_t cols = 0; cols < BOARD_COLS; cols++) {
+		columns[cols] = cols;
+	}
+
+	for (int cols = BOARD_COLS - 1; cols > 0; cols--) {
+		if (HAL_RNG_GenerateRandomNumber(&hrng, &random) == HAL_OK) {
+			uint8_t j = random % (cols + 1);
+			// Swap columns[i] and columns[j]
+			uint8_t temp = columns[cols];
+			columns[cols] = columns[j];
+			columns[j] = temp;
+		}
+	}
+
+	// check for winning moves
+	for (uint8_t cols = 0; cols < BOARD_COLS; cols++) {
+		uint8_t col = columns[cols];
+		if (CheckPotentialWin(col, PLAYER_TWO)) {
+			if (ConnectFour_DropPiece(col)) {
+				Game.currentCol = col;
+				return;
+			}
+		}
+	}
+
+	// block winning moves
+	for (uint8_t cols = 0; cols < BOARD_COLS; cols++) {
+		uint8_t col = columns[cols];
+		if (CheckPotentialWin(col, PLAYER_ONE)) {
+			if (ConnectFour_DropPiece(col)) {
+				Game.currentCol = col;
+				return;
+			}
+		}
+	}
+
+	// make a 3 in row
+	for (uint8_t cols = 0; cols < BOARD_COLS; cols++) {
+		uint8_t col = columns[cols];
+		uint8_t score = CountPiecesInRow(col, PLAYER_TWO);
+		if (score >= 2 && ConnectFour_DropPiece(col)) {
+			Game.currentCol = col;
+			return;
+		}
+	}
+
+	// make a 2 in row
+	for (uint8_t cols = 0; cols < BOARD_COLS; cols++) {
+		uint8_t col = columns[cols];
+		uint8_t score = CountPiecesInRow(col, PLAYER_TWO);
+		if (score >= 1 && ConnectFour_DropPiece(col)) {
+			Game.currentCol = col;
+			return;
+		}
+	}
+
+	// If no good moves found, make a random move
+	while (!validMove) {
+		if (HAL_RNG_GenerateRandomNumber(&hrng, &random) == HAL_OK) {
+			uint8_t col = random % BOARD_COLS;
+			if (ConnectFour_DropPiece(col)) {
+				Game.currentCol = col;
+				validMove = 1;
+			}
+		}
+	}
+}
+
 
 uint8_t ConnectFour_CheckWin(void){
 	// horizontal
