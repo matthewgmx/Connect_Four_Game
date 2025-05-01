@@ -219,8 +219,6 @@ static uint8_t CheckPotentialWin(uint8_t col, uint8_t player) {
 		}
 	}
 	if (row == -1) return 0; // Column is full
-
-	// Temporarily place the piece
 	Game.board[row][col] = player;
 
 	// Check all directions for a win
