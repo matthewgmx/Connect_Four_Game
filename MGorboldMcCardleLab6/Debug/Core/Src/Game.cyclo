@@ -7,8 +7,8 @@
 ../Core/Src/Game.c:124:6:ConnectFour_GameOver	3
 ../Core/Src/Game.c:202:9:ConnectFour_DropPiece	3
 ../Core/Src/Game.c:212:16:CheckPotentialWin	26
-../Core/Src/Game.c:282:16:CountPiecesInRow	22
-../Core/Src/Game.c:338:6:ConnectFour_ComputerMove	19
-../Core/Src/Game.c:416:9:ConnectFour_CheckWin	25
-../Core/Src/Game.c:452:9:ConnectFour_CheckDraw	4
-../Core/Src/Game.c:463:9:ConnectFour_GetGameTime	2
+../Core/Src/Game.c:279:16:CountPiecesInRow	22
+../Core/Src/Game.c:335:6:ConnectFour_ComputerMove	19
+../Core/Src/Game.c:409:9:ConnectFour_CheckWin	25
+../Core/Src/Game.c:445:9:ConnectFour_CheckDraw	4
+../Core/Src/Game.c:456:9:ConnectFour_GetGameTime	2

@@ -68,7 +68,5 @@ uint8_t ConnectFour_CheckWin(void); //
 uint8_t ConnectFour_CheckDraw(void); //
 void ConnectFour_ResetGame(void); //
 uint8_t ConnectFour_GetGameTime(void); //
-static uint8_t CountPiecesInRow(uint8_t col, uint8_t player); // use for making smart AI offense and defense
-static uint8_t CheckPotentialWin(uint8_t col, uint8_t player); // for
 
 #endif /* INC_GAME_H_ */

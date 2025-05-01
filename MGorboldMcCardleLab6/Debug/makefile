@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := MGorboldMcCardleLab6
+BUILD_ARTIFACT_NAME := MGorboldMcCardleFinalProject
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-MGorboldMcCardleLab6.elf \
+MGorboldMcCardleFinalProject.elf \
 
 MAP_FILES += \
-MGorboldMcCardleLab6.map \
+MGorboldMcCardleFinalProject.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-MGorboldMcCardleLab6.list \
+MGorboldMcCardleFinalProject.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: MGorboldMcCardleLab6.elf secondary-outputs
+main-build: MGorboldMcCardleFinalProject.elf secondary-outputs
 
 # Tool invocations
-MGorboldMcCardleLab6.elf MGorboldMcCardleLab6.map: $(OBJS) $(USER_OBJS) C:\Users\mattg\git\Connect_Four_Game\MGorboldMcCardleLab6\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "MGorboldMcCardleLab6.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\mattg\git\Connect_Four_Game\MGorboldMcCardleLab6\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MGorboldMcCardleLab6.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+MGorboldMcCardleFinalProject.elf MGorboldMcCardleFinalProject.map: $(OBJS) $(USER_OBJS) C:\Users\mattg\git\Connect_Four_Game\MGorboldMcCardleLab6\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "MGorboldMcCardleFinalProject.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\mattg\git\Connect_Four_Game\MGorboldMcCardleLab6\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MGorboldMcCardleFinalProject.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-MGorboldMcCardleLab6.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "MGorboldMcCardleLab6.list"
+MGorboldMcCardleFinalProject.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "MGorboldMcCardleFinalProject.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) MGorboldMcCardleLab6.elf MGorboldMcCardleLab6.list MGorboldMcCardleLab6.map default.size.stdout
+	-$(RM) MGorboldMcCardleFinalProject.elf MGorboldMcCardleFinalProject.list MGorboldMcCardleFinalProject.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

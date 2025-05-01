@@ -333,8 +333,6 @@ static uint8_t CountPiecesInRow(uint8_t col, uint8_t player) {
 }
 
 void ConnectFour_ComputerMove(void) {
-	uint8_t bestMove = 0;
-	uint8_t bestScore = 0;
 	uint8_t validMove = 0;
 	uint8_t columns[BOARD_COLS];
 	uint32_t random;
